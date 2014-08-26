@@ -1,5 +1,7 @@
 # ShortId
 
+[![Build Status](https://travis-ci.org/SKAhack/go-shortid.svg?branch=master)](https://travis-ci.org/SKAhack/go-shortid)
+
 Port of [dylang/shortid](https://github.com/dylang/shortid) to Go
 
 ## Usage
