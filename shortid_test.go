@@ -1,9 +1,11 @@
 package shortid
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestGenerate(t *testing.T) {
-
 	g := Generator()
 
 	g.SetCharacters("")
@@ -26,6 +28,18 @@ func TestGenerate(t *testing.T) {
 		}
 
 		ids[id] = true
+	}
+}
+
+func TestGenerateUnicodeChars(t *testing.T) {
+	g := Generator()
+	chars := "①②③④⑤⑥⑦⑧⑨⑩⑪⑫ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ"
+	g.SetCharacters(chars)
+	g.SetSeed(1)
+
+	id := g.Generate()
+	if !strings.ContainsAny(id, chars) {
+		t.Errorf("should contain Unicode characters. %v", id)
 	}
 }
 
@@ -81,10 +95,11 @@ func BenchmarkLookup(b *testing.B) {
 	g := Generator()
 	g.SetCharacters("")
 	g.SetSeed(1)
+	chars := strings.Split(g.chars.shuffle(), "")
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		g.lookup(15)
+		g.lookup(chars, 15)
 	}
 }
 

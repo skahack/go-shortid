@@ -94,16 +94,18 @@ func (g *Gen) SetCharacters(char string) error {
 
 func (g *Gen) encode(number int) string {
 	done := false
-	str := ""
+	str := make([]string, 20)
 	loopCounter := uint32(0)
+	alphabetshuffled := strings.Split(g.chars.shuffle(), "")
 
 	for !done {
-		str = str + g.lookup(((uint32(number)>>(4*loopCounter))&0x0f)|(g.randomByte()&0x30))
+		idx := ((uint32(number) >> (4 * loopCounter)) & 0x0f) | (g.randomByte() & 0x30)
+		str = append(str, g.lookup(alphabetshuffled, idx))
 		done = float64(number) < math.Pow(16, float64(loopCounter+1))
 		loopCounter++
 	}
 
-	return str
+	return strings.Join(str, "")
 }
 
 func (g *Gen) randomByte() uint32 {
@@ -111,7 +113,6 @@ func (g *Gen) randomByte() uint32 {
 	return uint32(r.Intn(256))
 }
 
-func (g *Gen) lookup(index uint32) string {
-	alphabetshuffled := g.chars.shuffle()
-	return string(alphabetshuffled[index])
+func (g *Gen) lookup(alphabetshuffled []string, index uint32) string {
+	return alphabetshuffled[index]
 }
